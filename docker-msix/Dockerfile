@@ -20,8 +20,8 @@ RUN <<EOT
         cmake
 EOT
 
-COPY msix-packaging /msix-src
-WORKDIR /msix-src
+RUN git clone --depth 1 https://github.com/soerenkoehler-org/msix-packaging.git
+WORKDIR /msix-packaging
 
 RUN ./makelinux.sh --pack
 
@@ -40,8 +40,8 @@ RUN <<EOT
     rm -rf /var/lib/apt/lists/*
 EOT
 
-COPY --from=builder /msix-src/.vs/bin/makemsix /usr/local/bin
-COPY --from=builder /msix-src/.vs/lib/libmsix.so /usr/lib
+COPY --from=builder /msix-packaging/.vs/bin/makemsix /usr/local/bin
+COPY --from=builder /msix-packaging/.vs/lib/libmsix.so /usr/lib
 
 WORKDIR /workspace
 ENTRYPOINT ["/usr/local/bin/makemsix"]
